@@ -37,9 +37,15 @@ jobs:
           unzip -q /tmp/gradle.zip -d /opt
           echo "/opt/gradle-${GRADLE_VERSION}/bin" >> $GITHUB_PATH
 
+      - name: List files
+        run: |
+          ls -la android/
+          ls -la android/*.gradle 2>/dev/null || true
+
       - name: Build debug APK
-        run: gradle assembleDebug --no-daemon
-        working-directory: android
+        run: |
+          cd android
+          gradle :app:assembleDebug --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
