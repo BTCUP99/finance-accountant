@@ -243,8 +243,8 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-                                        <Button Grid.Column="2" Content="删除" Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}" Background="#FF6B6B" Padding="10,5"/>
+                                        <Button Grid.Column="2" Content="删除" Background="#FF6B6B" Padding="10,5"
+                                                Click="DeleteButton_Click" Tag="{Binding}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

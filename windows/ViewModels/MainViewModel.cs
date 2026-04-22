@@ -111,7 +111,7 @@ public partial class MainViewModel : ObservableObject
     partial void OnSelectedMonthChanged(int value) => _ = LoadDataAsync();
 
     [RelayCommand]
-    private async Task AddTransactionAsync(CancellationToken ct)
+    private async Task AddTransactionAsync()
     {
         if (NewAmount <= 0 || string.IsNullOrWhiteSpace(NewCategory))
             return;
@@ -133,15 +133,14 @@ public partial class MainViewModel : ObservableObject
         NewNote = null;
     }
 
-    [RelayCommand]
-    private async Task DeleteTransactionAsync(Transaction t, CancellationToken ct)
+    public async Task DeleteTransactionAsync(Transaction t)
     {
         await _service.DeleteAsync(t.Id);
         await LoadDataAsync();
     }
 
     [RelayCommand]
-    private async Task ExportCsvAsync(CancellationToken ct)
+    private async Task ExportCsvAsync()
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
@@ -156,7 +155,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ExportExcelAsync(CancellationToken ct)
+    private async Task ExportExcelAsync()
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {

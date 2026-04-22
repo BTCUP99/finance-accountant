@@ -78,4 +78,12 @@ public partial class MainWindow : Window
     {
         UpdateCategoryCombo();
     }
+
+    private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is Models.Transaction transaction)
+        {
+            await ViewModel.DeleteTransactionAsync(transaction);
+        }
+    }
 }
