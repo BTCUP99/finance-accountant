@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+
+# Gradle
+android/.gradle
+android/build
+android/*/build
+android/*/build.gradle
+android/local.properties
+
+# Android
+*.apk
+*.aab
+*.dex
+
+# Windows
+windows/bin
+windows/obj
+windows/publish
+*.user
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
