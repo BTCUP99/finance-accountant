@@ -28,7 +28,8 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Create local.properties
-        run: echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
       - name: Install Gradle
         run: |
@@ -37,8 +38,8 @@ jobs:
           echo "/opt/gradle-${GRADLE_VERSION}/bin" >> $GITHUB_PATH
 
       - name: Build debug APK
-        working-directory: android
         run: gradle assembleDebug --no-daemon
+        working-directory: android
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
