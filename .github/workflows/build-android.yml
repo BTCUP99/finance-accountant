@@ -8,7 +8,6 @@ on:
 
 env:
   JAVA_VERSION: '17'
-  GRADLE_VERSION: '8.2'
 
 jobs:
   build:
@@ -31,21 +30,11 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
-      - name: Install Gradle
-        run: |
-          wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O /tmp/gradle.zip
-          unzip -q /tmp/gradle.zip -d /opt
-          echo "/opt/gradle-${GRADLE_VERSION}/bin" >> $GITHUB_PATH
-
-      - name: List files
-        run: |
-          ls -la android/
-          ls -la android/*.gradle 2>/dev/null || true
-
       - name: Build debug APK
         run: |
           cd android
-          gradle :app:assembleDebug --no-daemon
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
