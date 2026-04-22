@@ -111,7 +111,7 @@ public partial class MainViewModel : ObservableObject
     partial void OnSelectedMonthChanged(int value) => _ = LoadDataAsync();
 
     [RelayCommand]
-    private async Task AddTransactionAsync()
+    private void AddTransaction()
     {
         if (NewAmount <= 0 || string.IsNullOrWhiteSpace(NewCategory))
             return;
@@ -125,6 +125,11 @@ public partial class MainViewModel : ObservableObject
             Note = NewNote
         };
 
+        _ = AddTransactionAsync(transaction);
+    }
+
+    private async Task AddTransactionAsync(Transaction transaction)
+    {
         await _service.AddAsync(transaction);
         await LoadDataAsync();
 
@@ -140,7 +145,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ExportCsvAsync()
+    private void ExportCsv()
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
@@ -150,12 +155,17 @@ public partial class MainViewModel : ObservableObject
 
         if (dialog.ShowDialog() == true)
         {
-            await _service.ExportToCsvAsync(dialog.FileName, Transactions.ToList());
+            _ = ExportCsvAsync(dialog.FileName);
         }
     }
 
+    private async Task ExportCsvAsync(string path)
+    {
+        await _service.ExportToCsvAsync(path, Transactions.ToList());
+    }
+
     [RelayCommand]
-    private async Task ExportExcelAsync()
+    private void ExportExcel()
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
@@ -165,8 +175,13 @@ public partial class MainViewModel : ObservableObject
 
         if (dialog.ShowDialog() == true)
         {
-            await _service.ExportToExcelAsync(dialog.FileName, Transactions.ToList());
+            _ = ExportExcelAsync(dialog.FileName);
         }
+    }
+
+    private async Task ExportExcelAsync(string path)
+    {
+        await _service.ExportToExcelAsync(path, Transactions.ToList());
     }
 
     private async Task UpdateChartsAsync()
