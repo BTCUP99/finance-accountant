@@ -209,8 +209,10 @@ public partial class MainViewModel : ObservableObject
         var daysInMonth = Enumerable.Range(1, DateTime.DaysInMonth(_selectedYear, _selectedMonth)).ToList();
         var allDays = daysInMonth.Select(d => new DateTime(_selectedYear, _selectedMonth, d)).ToList();
 
-        var incomeValues = allDays.Select(d => dailyIncome.GetValueOrDefault(d, 0)).ToArray();
-        var expenseValues = allDays.Select(d => dailyExpense.GetValueOrDefault(d, 0)).ToArray();
+        decimal incomeVal = 0;
+        decimal expenseVal = 0;
+        var incomeValues = allDays.Select(d => dailyIncome.TryGetValue(d, out incomeVal) ? incomeVal : 0).ToArray();
+        var expenseValues = allDays.Select(d => dailyExpense.TryGetValue(d, out expenseVal) ? expenseVal : 0).ToArray();
 
         LineSeries = new ISeries[]
         {
