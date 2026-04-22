@@ -1,30 +1,32 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-#
-# Gradle wrapper script for macOS/Linux
-#
+# Gradle wrapper script
+# Downloads and runs gradle
 
-# Determine the script directory
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_PROPS="$WRAPPER_DIR/gradle/wrapper/gradle-wrapper.properties"
+WRAPPER_JAR="$WRAPPER_DIR/gradle/wrapper/gradle-wrapper.jar"
 
-# Gradle wrapper jar location
-WRAPPER_JAR="$SCRIPT_DIR/gradle/wrapper/gradle-wrapper.jar"
-
-# Gradle wrapper properties
-WRAPPER_PROPERTIES="$SCRIPT_DIR/gradle/wrapper/gradle-wrapper.properties"
-
-# Download wrapper jar if not exists
-if [ ! -f "$WRAPPER_JAR" ]; then
-    echo "Downloading Gradle wrapper..."
-    mkdir -p "$SCRIPT_DIR/gradle/wrapper"
-    curl -L -o "$WRAPPER_JAR" "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar" 2>/dev/null || \
-    wget -O "$WRAPPER_JAR" "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar" 2>/dev/null
-fi
-
-# Execute gradle
-if [ -f "$WRAPPER_JAR" ]; then
-    exec java -jar "$WRAPPER_JAR" "$@"
-else
-    echo "Error: Could not download gradle-wrapper.jar"
+# Check if java is available
+if ! command -v java > /dev/null; then
+    echo "Java not found. Please install Java."
     exit 1
 fi
+
+# If wrapper jar doesn't exist, download it
+if [ ! -f "$WRAPPER_JAR" ]; then
+    echo "Downloading Gradle wrapper..."
+    mkdir -p "$WRAPPER_DIR/gradle/wrapper"
+
+    GRADLE_VERSION=$(grep 'distributionUrl' "$WRAPPER_PROPS" | sed 's/.*gradle-\([0-9.]*\).*/\1/')
+    WRAPPER_URL="https://github.com/gradle/gradle/raw/v${GRADLE_VERSION}/gradle/wrapper/gradle-wrapper.jar"
+
+    if command -v curl > /dev/null; then
+        curl -L -o "$WRAPPER_JAR" "$WRAPPER_URL" 2>/dev/null
+    elif command -v wget > /dev/null; then
+        wget -O "$WRAPPER_JAR" "$WRAPPER_URL" 2>/dev/null
+    fi
+fi
+
+# Run gradle
+exec java -jar "$WRAPPER_JAR" "$@"
