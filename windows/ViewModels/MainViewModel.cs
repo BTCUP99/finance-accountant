@@ -5,6 +5,7 @@ using FinanceAccountant.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -110,7 +111,7 @@ public partial class MainViewModel : ObservableObject
     partial void OnSelectedMonthChanged(int value) => _ = LoadDataAsync();
 
     [RelayCommand]
-    private async Task AddTransactionAsync()
+    private async Task AddTransactionAsync(CancellationToken ct)
     {
         if (NewAmount <= 0 || string.IsNullOrWhiteSpace(NewCategory))
             return;
@@ -133,14 +134,14 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task DeleteTransactionAsync(Transaction t)
+    private async Task DeleteTransactionAsync(Transaction t, CancellationToken ct)
     {
         await _service.DeleteAsync(t.Id);
         await LoadDataAsync();
     }
 
     [RelayCommand]
-    private async Task ExportCsvAsync()
+    private async Task ExportCsvAsync(CancellationToken ct)
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
@@ -155,7 +156,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ExportExcelAsync()
+    private async Task ExportExcelAsync(CancellationToken ct)
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
